@@ -20,7 +20,7 @@ a1, a2 = sp.symbols('a1 a2')
 
 # Parámetros DH simbólicos: [theta, d, a, alpha]
 dh_params_sym = [
-    [th1, 0, a1, 0],
+    [th1, 0, 0, 0],
     [th2, 0, a2, 0],
 ]
 
