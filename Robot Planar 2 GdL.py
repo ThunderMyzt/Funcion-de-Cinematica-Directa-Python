@@ -23,4 +23,4 @@ dh_params_sym = [
 ]
 H_sym_class = ForwardKinematicsDH.symbolic(dh_params_sym)
 print("End-effector transformation matrix:")
-sp.pprint(H_sym_class, use_unicode=True)
+sp.pprint(H_sym_class, use_unicode=True) #.
