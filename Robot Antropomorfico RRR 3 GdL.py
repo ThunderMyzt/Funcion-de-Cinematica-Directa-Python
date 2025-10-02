@@ -8,7 +8,7 @@ dh_params = [
     [np.pi/4, 0, 1, 0],
     [np.pi/4, 0, 1, 0],
 ]
-H_class = ForwardKinematicsDH.numeric(dh_params)
+#H_class = ForwardKinematicsDH.numeric(dh_params)
 #print("End-effector transformation matrix:")
 #print(H_class)
 
@@ -18,7 +18,7 @@ q1, q2, q3 = sp.symbols('q1 q2 q3')
 l1, l2, l3 = sp.symbols('l1 l2 l3')
 dh_params_sym = [
     # q  d  l   a
-    [q1, 0, l1, np.pi/2],
+    [q1, 0, l1, sp.pi/2],
     [q2, 0, l2, 0],
     [q3, 0, l2, 0],
 ]

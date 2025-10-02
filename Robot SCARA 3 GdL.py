@@ -20,7 +20,7 @@ d3 = sp.symbols('d3')
 dh_params_sym = [
     # q  d  l   a
     [q1, 0, l1, 0],
-    [q2, 0, l2, 180],
+    [q2, 0, l2, 180],   #Se añadio una 3ra fila para el 3er GdL y se sustituyo el 180 como lo indicaba la matriz del libro
     [0, d3, 0, 0],
 ]
 H_sym_class = ForwardKinematicsDH.symbolic(dh_params_sym)
