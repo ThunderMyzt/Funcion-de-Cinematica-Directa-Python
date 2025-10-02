@@ -17,6 +17,7 @@ print("\nEjSimbolico:")
 q1, q2 = sp.symbols('q1 q2')
 l1, l2 = sp.symbols('l1 l2')
 dh_params_sym = [
+    # q  d  l   a
     [q1, 0, l1, 0],
     [q2, 0, l2, 0],
 ]
