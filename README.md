@@ -1,70 +1,102 @@
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) 
-# DH Forward Kinematics Python
+# Implementación de Cinemática Directa Simbólica para Robots RR, RRR y SCARA
 
-This project provides tools to compute the forward kinematics of serial robotic manipulators using Denavit-Hartenberg (DH) parameters. It supports both numerical and symbolic calculations, making it useful for both simulation and analytical studies.
+## 1. Breve Introducción
 
-## Features
-- Compute forward kinematics numerically using NumPy
-- Compute forward kinematics symbolically using SymPy
-- Unified class interface for both calculation types
-- Example scripts for quick testing
+La cinemática de robots es una de las áreas fundamentales de la robótica que se encarga de estudiar el movimiento de los mismos sin considerar las fuerzas que lo producen. Específicamente, la **cinemática directa** busca determinar la posición y orientación del efector final del robot en el espacio, a partir de sus valores articulares (giros en las articulaciones o desplazamientos).
 
-## File Structure
-- `forward_kinematics_dh.py`: Numeric DH forward kinematics functions (NumPy)
-- `forward_kinematics_dh_symbolic.py`: Symbolic DH forward kinematics functions (SymPy)
-- `forward_kinematics_dh_class.py`: Unified class with both numeric and symbolic methods
-- `example.py`: Example usage of numeric and symbolic functions (separate functions)
-- `example2.py`: Example usage of the unified class for both numeric and symbolic calculations
+El método de **Denavit-Hartenberg (D-H)** es un algoritmo estándar que permite sistematizar este proceso, asignando sistemas de coordenadas a cada eslabón del robot para obtener una matriz de transformación homogénea que relaciona un eslabón con el siguiente. La multiplicación consecutiva de estas matrices nos da la matriz de transformación total, que describe la ubicación del efector final respecto a la base del robot.
 
-## How to Use
-1. **Clone the repository**
-   ```sh
-   git clone <your-repo-url>
-   cd dh_forward_kinematics_python
-   ```
-2. **Install dependencies**
-   This project requires `numpy` and `sympy`. Install them with:
-   ```sh
-   pip install numpy sympy
-   ```
-3. **Run examples**
-   - For basic function usage:
-     ```sh
-     python example.py
-     ```
-   - For class-based usage:
-     ```sh
-     python example2.py
-     ```
+En este proyecto, se implementó la cinemática directa simbólica de tres configuraciones de robots distintas, utilizando el lenguaje de programación **Python**  y la librería `SymPy` para el manejo de variables simbólicas. El desarrollo se realizó en el entorno de Visual Studio Code, basándonos en el código proporcionado en el repositorio [DH-Forward-Kinematics-Function---Python](https://github.com/SolKacil/DH-Forward-Kinematics-Function---Python) y los parámetros D-H del libro "Control de robots manipuladores" de Fernando Reyes Cortés.
 
-## How It Works
-- **Numeric calculation:**
-  - Provide a list of DH parameters (theta, d, a, alpha) for each joint as numbers.
-  - The code computes the transformation matrix using NumPy.
-- **Symbolic calculation:**
-  - Provide DH parameters as SymPy symbols or expressions.
-  - The code computes the transformation matrix symbolically, allowing for analytical manipulation.
-- **Unified class:**
-  - The `ForwardKinematicsDH` class provides both `numeric()` and `symbolic()` static methods for easy switching between calculation types.
+El objetivo es obtener la **matriz de transformación homogénea simbólica** ($^0T_E$) para cada robot, la cual nos da la información de la posición y orientación del efector final de forma algebraica.
 
-## Example
-```
-from forward_kinematics_dh_class import ForwardKinematicsDH
-import numpy as np
-import sympy as sp
+---
 
-# Numeric
-dh_params = [[np.pi/4, 0, 1, 0], [np.pi/4, 0, 1, 0]]
-H = ForwardKinematicsDH.numeric(dh_params)
-print(H)
+## 2. Metodología
 
-# Symbolic
-th1, th2 = sp.symbols('th1 th2')
-a1, a2 = sp.symbols('a1 a2')
-dh_params_sym = [[th1, 0, a1, 0], [th2, 0, a2, 0]]
-H_sym = ForwardKinematicsDH.symbolic(dh_params_sym)
-sp.pprint(H_sym)
-```
+El procedimiento consistió en adaptar el código base de Python para que, en lugar de recibir valores numéricos, trabajara con variables simbólicas que representan los parámetros D-H de cada robot. Para cada configuración, se siguió el mismo proceso:
 
-## License
-MIT
+1.  **Identificar los parámetros D-H**: Se extrajeron las tablas con los parámetros de Denavit-Hartenberg para cada robot del libro de texto.
+2.  **Definir variables simbólicas**: En el script de Python, se crearon los símbolos necesarios para las variables articulares ($q_i$) y las longitudes de los eslabones ($l_i$) usando la librería `SymPy`.
+3.  **Construir la tabla de parámetros simbólica**: Se creó una lista en Python que representa la tabla D-H, utilizando las variables simbólicas definidas en el paso anterior.
+4.  **Calcular la matriz de transformación**: Se utilizó la función `ForwardKinematicsDH.symbolic()` del código base, pasándole como argumento la tabla de parámetros simbólica para que calculara la matriz de transformación homogénea final.
+
+A continuación, se detalla la implementación para cada uno de los robots analizados.
+
+###  Robot Planar de 2 Grados de Libertad (RR)
+
+Este robot, también conocido como RR (Rotacional-Rotacional), es un manipulador simple que se mueve en un plano y consta de dos articulaciones de revolución.
+
+(RbtPlanar.png)
+
+Los parámetros D-H para este robot, obtenidos del libro, son los siguientes:
+
+(MtrzDHPlanar.png)
+
+Estos parámetros se tradujeron al script de Python, definiendo `q1`, `q2`, `l1` y `l2` como variables simbólicas para construir la tabla de parámetros que se le pasó a la función de cálculo.
+
+
+###  Robot Antropomórfico de 3 Grados de Libertad (RRR)
+
+Este robot RRR (Rotacional-Rotacional-Rotacional) se asemeja a un brazo humano, con tres articulaciones de revolución que le permiten alcanzar una mayor área de trabajo en un espacio tridimensional.
+
+(RbtRRR.png)
+
+La tabla de parámetros Denavit-Hartenberg para esta configuración es:
+
+(MtrzDHRRR.png)
+
+En el script de Python, se definieron las variables simbólicas `q1`, `q2`, `q3`, `l1`, `l2` y `l3`. Un detalle importante en la implementación fue la representación del parámetro $\alpha_1 = 90^{\circ}$, que en la librería `SymPy` se debe indicar en radianes como `sp.pi/2` para que los cálculos simbólicos de seno y coseno sean correctos.
+
+
+### ⚙️ Robot de Configuración SCARA (RRP)
+
+El robot SCARA (Selective Compliance Assembly Robot Arm) es ampliamente utilizado en tareas de ensamblaje. Su configuración RRP (Rotacional-Rotacional-Prismática) consta de dos articulaciones de revolución y una articulación prismática, lo que le da rigidez en el eje Z pero flexibilidad en el plano XY.
+
+(RbtSCARA.png)
+
+Sus correspondientes parámetros D-H se muestran en la siguiente tabla:
+
+(DHRbtSCARA.png)
+
+Para este robot, se definieron las variables simbólicas `q1`, `q2`, `d3`, `l1` y `l2`. La tercera articulación es prismática, por lo que su variable articular es `d3` (un desplazamiento lineal) en lugar de un ángulo $q$.
+
+---
+
+## 3. Resultados
+
+Al ejecutar cada uno de los scripts de Python, se imprimió en la terminal la matriz de transformación homogénea simbólica final ($^0T_E$). Esta matriz de 4x4 contiene en su submatriz de 3x3 superior izquierda la **orientación** del efector final y en la última columna la **posición** (x, y, z) del mismo, todo expresado de forma algebraica en función de las variables articulares.
+
+Los resultados obtenidos fueron verificados exitosamente, comparándolos con las matrices de resultado que se presentan en el libro de texto. 
+
+### Resultado: Robot Planar (RR)
+
+La matriz obtenida en la terminal para el robot RR fue:
+
+(RbtPlanarVC.png)
+
+Esta coincide con la matriz de transformación homogénea presentada en la bibliografía:
+
+(MtrzHomgPlanar.png)
+
+### Resultado: Robot Antropomórfico (RRR)
+
+La salida en la terminal para el robot RRR fue la siguiente:
+
+(RbtRRRVC.png)
+
+La cual es equivalente a la matriz de transformación que se muestra en el libro:
+
+(MtrzHomgRRR.png)
+
+### Resultado: Robot SCARA (RRP)
+
+Finalmente, la matriz simbólica obtenida para la configuración SCARA fue:
+
+(RbtSCARAVC.png)
+
+Este resultado también fue validado y coincide con la matriz final del libro:
+
+(MtrzHomgSCARA.png)
+
+La correcta obtención de estas matrices demuestra que la implementación de la cinemática directa simbólica a partir de los parámetros D-H se realizó de manera exitosa.

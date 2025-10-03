@@ -18,7 +18,7 @@ q1, q2, q3 = sp.symbols('q1 q2 q3')
 l1, l2, l3 = sp.symbols('l1 l2 l3')
 dh_params_sym = [
     # q  d  l   a
-    [q1, 0, l1, sp.pi/2],
+    [q1, 0, l1, sp.pi/2], #Se añadio una 3ra fila para el 3er GdL y para el pi medios se utilizo sp por que es la simbolica
     [q2, 0, l2, 0],
     [q3, 0, l2, 0],
 ]
